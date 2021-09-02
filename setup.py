@@ -1,13 +1,15 @@
 #!/usr/bin/env python
 import sys
 import os
-
+import pathlib
+import pkg_resources
 from setuptools import setup, find_packages
 from setuptools.command.test import test as TestCommand
 
+
 here = os.path.abspath(os.path.dirname(__file__))
 about = {}
-MODULE_NAME="package_name"
+MODULE_NAME="markings"
 with open(os.path.join(here, MODULE_NAME, "__version__.py"), "r") as f:
     exec(f.read(), about)
 
@@ -27,6 +29,15 @@ class PyTest(TestCommand):
         errno = pytest.main(self.pytest_args)
         sys.exit(errno)
 
+def parse_requirements_file(file_name):
+    with pathlib.Path(file_name).open() as requirements_txt:
+        install_requires = [
+            str(requirement)
+            for requirement
+            in pkg_resources.parse_requirements(requirements_txt)
+        ]
+    return install_requires
+
 
 setup(
     name=MODULE_NAME,
@@ -38,17 +49,10 @@ setup(
     long_description_content_type="text/markdown",
     url=about["__url__"],
     packages=find_packages(),
-    install_requires=[
-        "Click==7.0",
-        "tinydb==3.15.2",
-        "pylint==2.4.4",
-    ],
-    tests_require=["pytest", "pytest_mock"],
+    install_requires=parse_requirements_file("requirements.txt"),
+    tests_require=parse_requirements_file("requirements-test.txt"),
     extras_require={
-        'dev': [
-            'pyinstaller'
-        ]
+        'dev': parse_requirements_file("requirements-dev.txt")
     },
     cmdclass={"test": PyTest},
-    scripts=["./bin/package_name_cli"],
 )
