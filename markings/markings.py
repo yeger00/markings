@@ -28,12 +28,9 @@ class _Marker:
         return bool(self.marks)
 
     def __str__(self) -> str:
-        ret_str = ''
-        for mark in self.marks:
-            ret_str += f'{str(mark)}\n'
-        return ret_str
+        return '\n'.join(map(str, self.marks))
 
-    def __call__(self, func_or_message: Union[Callable[[Any], Any], str]) -> Callable[[Any], Any]:
+    def __call__(self, func_or_message: Union[Callable, str]) -> Callable:
         if callable(func_or_message):
             message = ''
             func = func_or_message
@@ -46,12 +43,10 @@ class _Marker:
             self.marks.append(Mark(funcname=function.__name__, filename=caller_frame.filename, lineno=caller_frame.lineno, message=message))
             return function
 
-        if func:
-            return decorator(func)
-        return decorator
+        return decorator(func) if func else decorator
 
     def clear_all(self):
-        self.marks = []
+        self.marks.clear()
 
 
 class Marker:
@@ -74,3 +69,5 @@ class Marker:
 
 
 marker = Marker()
+todo = marker.todo
+known_issue = marker.known_issue

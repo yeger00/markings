@@ -1,13 +1,20 @@
-[![image](https://img.shields.io/pypi/v/package_name.svg)](https://pypi.org/project/package_name)
+[![image](https://img.shields.io/pypi/v/markings.svg)](https://pypi.org/project/markings)
+[![Build Status](https://app.travis-ci.com/yeger00/markings.svg?branch=master)](https://app.travis-ci.com/yeger00/markings)
 
-# package_name
+# Markings
 Description
 
 # Installation
+```
+pip install markings
+```
 
 # Getting started
 
 # Tests
+```
+./scripts/test.sh
+```
 
 # Lint
 
