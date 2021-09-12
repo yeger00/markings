@@ -2,7 +2,7 @@
 [![Build Status](https://app.travis-ci.com/yeger00/markings.svg?branch=master)](https://app.travis-ci.com/yeger00/markings)
 
 # Markings
-`markings` is a library that provides a way to mark issues in your code.
+`markings` is a library that provides a way to mark your Python module, usually with issues.
 Because it is part of the code, it enable you to have an "up to date" list of issues, per a commit, and to be able to view the trends of the issues along the git commits as oppose to using an external [issue tracking system](https://en.wikipedia.org/wiki/Issue_tracking_system).
 
 The library is based on [pytest's markers](https://docs.pytest.org/en/6.2.x/example/markers.html) and especially on `@pytest.mark.xfail`.
