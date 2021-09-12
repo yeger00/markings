@@ -1,6 +1,6 @@
 '''
 '''
-from typing import Union, Callable, Any
+from typing import Union, Callable, Any, List, Iterator
 import inspect
 from dataclasses import dataclass
 
@@ -11,13 +11,17 @@ class Mark:
     funcname: str
     lineno: int
     message: str
+    module: str
 
     def __str__(self) -> str:
-        return f'{self.filename}:{self.funcname}:{self.lineno}: {self.message}'
+        return f'{self.module}:{self.filename}:{self.funcname}:{self.lineno}: {self.message}'
 
 
 class _Marker:
-    def __init__(self, name):
+    name: str
+    marks: List[Mark]
+
+    def __init__(self, name: str):
         self.name = name
         self.marks = []
 
@@ -39,14 +43,33 @@ class _Marker:
             func = None
 
         caller_frame = inspect.getframeinfo(inspect.currentframe().f_back)
-        def decorator(function):
-            self.marks.append(Mark(funcname=function.__name__, filename=caller_frame.filename, lineno=caller_frame.lineno, message=message))
+        def decorator(function: Callable):
+            module = function.__module__.split(".")[0]
+            funcname = function.__name__
+            filename = caller_frame.filename
+            lineno = caller_frame.lineno
+
+            self.marks.append(Mark(
+                module=module,
+                funcname=funcname,
+                filename=filename,
+                lineno=lineno,
+                message=message
+            ))
+
             return function
 
         return decorator(func) if func else decorator
 
     def clear_all(self):
         self.marks.clear()
+
+    def filter(self, module: str, exact: bool = True) -> Iterator[Mark]:
+        if exact:
+            match_func = lambda mark: module == mark.module
+        else:
+            match_func = lambda mark: module in mark.module
+        return filter(match_func, self.marks)
 
 
 class Marker:
@@ -64,7 +87,7 @@ class Marker:
             ret_str += f'{name}:\n{str(marker)}\n'
         return ret_str
 
-    def __iter__(self):
+    def __iter__(self) -> Iterator:
         return iter(self.markers_dict.items())
 
 
