@@ -55,4 +55,5 @@ setup(
         'dev': parse_requirements_file("requirements-dev.txt")
     },
     cmdclass={"test": PyTest},
+    data_files=[("", ["requirements.txt", "requirements-test.txt", "requirements-dev.txt"])],
 )

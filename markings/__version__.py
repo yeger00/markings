@@ -1,4 +1,4 @@
-__version__ = "0.0.3"
+__version__ = "0.0.5"
 __description__ = "Mark your Python modules"
 __url__ = "https://pypi.org/project/markings/"
 __author__ = "yeger00"
